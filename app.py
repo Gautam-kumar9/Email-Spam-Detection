@@ -4,10 +4,6 @@ import string
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
-
-# Download necessary NLTK datasets
-# nltk.download('punkt')
-import nltk
 import os
 
 # Set custom NLTK data path
@@ -17,11 +13,9 @@ if not os.path.exists(nltk_data_path):
 
 nltk.data.path.append(nltk_data_path)
 
-# Download required datasets
+# Ensure necessary NLTK datasets are downloaded
 nltk.download('punkt', download_dir=nltk_data_path)
 nltk.download('stopwords', download_dir=nltk_data_path)
-
-nltk.download('stopwords')
 
 ps = PorterStemmer()
 
@@ -49,7 +43,7 @@ def transform_text(text):
 
     return " ".join(words)
 
-if st.button('Predict'):  # Corrected st.Buttom to st.button
+if st.button('Predict'):  
     transformed_sms = transform_text(sms)
     vector_input = tfidf.transform([transformed_sms])
     result = model.predict(vector_input)[0]
