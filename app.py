@@ -42,7 +42,28 @@ if st.button('Predict'):  # Corrected st.Buttom to st.button
     result = model.predict(vector_input)[0]
 
     # Display result
+    
+
     if result == 1:
-        st.header("🚨 SPAM 🚨")
+        st.markdown(
+            "<h1 style='text-align: center; color: red;'>🚨 SPAM ALERT! 🚨</h1>",
+            unsafe_allow_html=True
+        )
+        st.markdown(
+            "<div style='text-align: center; background-color: #ffcccc; padding: 10px; border-radius: 10px;'>"
+            "<h3 style='color: red;'>Be Careful! This message looks like SPAM.</h3>"
+            "</div>",
+            unsafe_allow_html=True
+        )
     else:
-        st.header("✅ NOT SPAM ✅")
+        st.markdown(
+            "<h1 style='text-align: center; color: green;'>✅ NOT SPAM ✅</h1>",
+            unsafe_allow_html=True
+        )
+        st.markdown(
+            "<div style='text-align: center; background-color: #ccffcc; padding: 10px; border-radius: 10px;'>"
+            "<h3 style='color: green;'>You're Safe! This message seems genuine. 👍</h3>"
+            "</div>",
+            unsafe_allow_html=True
+        )
+
