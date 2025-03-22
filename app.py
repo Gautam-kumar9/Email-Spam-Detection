@@ -8,6 +8,7 @@ import re
 
 # ✅ Download required NLTK resources
 nltk.download('punkt')
+nltk.download('punkt_tab')
 nltk.download('stopwords')
 
 # ✅ Load the trained model
