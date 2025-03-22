@@ -1,48 +1,50 @@
 import streamlit as st
-import nltk
-import string
 import pickle
+import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
+import string
+import re
 
-# 🛠 Fix: Ensure 'punkt' is downloaded
+# ✅ Download required NLTK resources
 nltk.download('punkt')
 nltk.download('stopwords')
 
-# Load trained model & vectorizer (Ensure these files exist in your project)
-MODEL_PATH = "model.pkl"
-VECTORIZER_PATH = "vectorizer.pkl"
+# ✅ Load the trained model
+model_path = "model.pkl"
+vectorizer_path = "vectorizer.pkl"
 
-with open(MODEL_PATH, "rb") as model_file:
-    model = pickle.load(model_file)
+with open(model_path, "rb") as f:
+    model = pickle.load(f)
 
-with open(VECTORIZER_PATH, "rb") as vectorizer_file:
-    vectorizer = pickle.load(vectorizer_file)
+with open(vectorizer_path, "rb") as f:
+    vectorizer = pickle.load(f)
 
-# Text preprocessing function
+# ✅ Text Preprocessing Function
 def transform_text(text):
     text = text.lower()  # Convert to lowercase
-    tokens = word_tokenize(text)  # Tokenize text
-    tokens = [word for word in tokens if word.isalnum()]  # Remove punctuations
-    tokens = [word for word in tokens if word not in stopwords.words('english')]  # Remove stopwords
-    return " ".join(tokens)
+    text = re.sub(r'\d+', '', text)  # Remove numbers
+    text = text.translate(str.maketrans("", "", string.punctuation))  # Remove punctuation
+    tokens = word_tokenize(text)  # Tokenize words
+    stop_words = set(stopwords.words("english"))
+    filtered_tokens = [word for word in tokens if word not in stop_words]  # Remove stopwords
+    return " ".join(filtered_tokens)
 
-# Streamlit UI
-st.title("📩 Email Spam Detection App")
+# ✅ Streamlit UI
+st.title("Email Spam Detection App 🚀")
 
-# User input
-sms = st.text_area("Enter the message/email:")
+sms = st.text_area("Enter the message:", "")
 
-if st.button("Predict"):
+if st.button("Check Spam"):
     if sms:
         transformed_sms = transform_text(sms)
-        vector_input = vectorizer.transform([transformed_sms])  # Convert text to vector
-        result = model.predict(vector_input)[0]  # Predict spam or not
+        vectorized_input = vectorizer.transform([transformed_sms])
+        prediction = model.predict(vectorized_input)[0]
 
-        # Display result
-        if result == 1:
-            st.error("⚠️ This message is **Spam**!")
+        if prediction == 1:
+            st.error("🚨 Spam Message Detected!")
         else:
-            st.success("✅ This message is **Not Spam**.")
+            st.success("✅ This message is NOT spam.")
     else:
-        st.warning("Please enter a message for prediction.")
+        st.warning("⚠️ Please enter a message to check.")
+
